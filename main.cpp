@@ -2,55 +2,17 @@
 #include <queue>
 int main()
 {
-    std::queue<std::shared_ptr<cTask>> TaskQueue;
+    
     auto spData{ std::make_shared<cData>() };
-    auto spState1{ std::shared_ptr<cTask>( new cTask1 ) };
-    auto spState2{ std::shared_ptr<cTask>( new cTask2 ) };
-    auto spState3{ std::shared_ptr<cTask>( new cTask3 ) };
-    auto spState4{ std::shared_ptr<cTask>( new cTask4 ) };
-
-    spState1->SetDataPointer( spData );
-    spState2->SetDataPointer( spData );
-    spState3->SetDataPointer( spData );
-    spState4->SetDataPointer( spData );
-
-    size_t nPreviousRandomNumber = 0;
+    auto spStatus{ std::make_shared<cStatus>() };
+    auto spTQ{ std::make_unique<cTaskQueue>(spData, spStatus) };
     
-    for(size_t i=0; i<10; ++i)
+    spTQ->RunTQ();
+    
+    auto ResultingStatus = spStatus->GetStatusMessage();
+    for(auto Message : *(ResultingStatus.get()) )
     {
-        srand( (unsigned)time(NULL) );
-        size_t nRsandNum = ( rand() % 4 ) + 1;
-        
-        while( nPreviousRandomNumber == nRsandNum )
-        {
-            nRsandNum = ( rand() % 4 ) + 1;
-        }
-        
-        nPreviousRandomNumber = nRsandNum;
-        if(nRsandNum == 1)
-        {
-            TaskQueue.push(spState1);
-        }
-        else if(nRsandNum == 2)
-        {
-            TaskQueue.push(spState2);
-        }
-        else if(nRsandNum == 3)
-        {
-            TaskQueue.push(spState3);
-        }
-        else if(nRsandNum == 4)
-        {
-            TaskQueue.push(spState4);
-        }
-    }
-    
-      
-    
-    while ( !TaskQueue.empty() )
-    {
-        TaskQueue.front()->ExecuteStateTask();
-        TaskQueue.pop();
+        std::cout << Message << std::endl;
     }
     return 0;
 
