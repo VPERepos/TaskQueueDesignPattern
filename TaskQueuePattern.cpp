@@ -13,25 +13,25 @@ void cTask::SetStatusPointer( const std::shared_ptr<cStatus>& spStatus )
     m_spStatus = spStatus;
 };
 
-void cTask1::ExecuteStateTask()
+void cTask1::ExecuteTask()
 {
     m_spData->m_vGuestBook.push_back( "Task 1 was here" );
     m_spStatus->SetStatusMessage("TQ: Executing Task 1");
 }
 
-void cTask2::ExecuteStateTask()
+void cTask2::ExecuteTask()
 {
     m_spData->m_vGuestBook.push_back( "Task 2 was here" );
     m_spStatus->SetStatusMessage("TQ: Executing Task 2");
 }
 
-void cTask3::ExecuteStateTask()
+void cTask3::ExecuteTask()
 {
     m_spData->m_vGuestBook.push_back( "Task 3 was here" );
     m_spStatus->SetStatusMessage("TQ: Executing Task 3");
 }
 
-void cTask4::ExecuteStateTask()
+void cTask4::ExecuteTask()
 {
     m_spData->m_vGuestBook.push_back( "Task 4 was here" );
     m_spStatus->SetStatusMessage("TQ: Executing Task 4");
@@ -124,7 +124,7 @@ void cTaskQueue::RunTQ()
 {
     while ( !m_TaskQueue.empty() && m_spStatus->GetStatus())
     {
-        m_TaskQueue.front()->ExecuteStateTask();
+        m_TaskQueue.front()->ExecuteTask();
         m_TaskQueue.pop();
     }
     m_spStatus->SetStatusMessage("TQ: Task queue is succesfully executed");

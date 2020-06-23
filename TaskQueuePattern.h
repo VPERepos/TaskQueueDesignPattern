@@ -29,7 +29,7 @@ class cTask
 public:
     cTask() {};
     virtual ~cTask(){};
-    virtual void ExecuteStateTask(){};
+    virtual void ExecuteTask(){};
     void SetDataPointer( const std::shared_ptr<cData>& spData );
     void SetStatusPointer( const std::shared_ptr<cStatus>& spStatus );
 protected:
@@ -42,28 +42,28 @@ class cTask1 : public cTask
 {
 public:
     ~cTask1()override{};
-    void ExecuteStateTask() override;
+    void ExecuteTask() override;
 };
 
 class cTask2 : public cTask
 {
 public:
     ~cTask2()override{};
-    void ExecuteStateTask() override;
+    void ExecuteTask() override;
 };
 
 class cTask3 : public cTask
 {
 public:
     ~cTask3()override{};
-    void ExecuteStateTask() override;
+    void ExecuteTask() override;
 };
 
 class cTask4 : public cTask
 {
 public:
     ~cTask4()override{};
-    void ExecuteStateTask() override;
+    void ExecuteTask() override;
 };
 
 class cTaskQueue
