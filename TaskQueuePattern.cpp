@@ -3,82 +3,82 @@
 
 
 
-void cTask::SetDataPointer( const std::shared_ptr<cData>& spData )
+void Task::setDataPointer( const std::shared_ptr<Data>& spData )
 {
-    m_spData = spData;
+    this->spData = spData;
 }
 
-void cTask::SetStatusPointer( const std::shared_ptr<cStatus>& spStatus )
+void Task::setStatusPointer( const std::shared_ptr<Status>& spStatus )
 {
-    m_spStatus = spStatus;
+    this->spStatus = spStatus;
 };
 
-void cTask1::ExecuteTask()
+void Task1::executeTask()
 {
-    m_spData->m_vGuestBook.push_back( "Task 1 was here" );
-    m_spStatus->SetStatusMessage("TQ: Executing Task 1");
+    spData->vGuestBook.push_back( "Task 1 was here" );
+    spStatus->setStatusMessage("TQ: Executing Task 1");
 }
 
-void cTask2::ExecuteTask()
+void Task2::executeTask()
 {
-    m_spData->m_vGuestBook.push_back( "Task 2 was here" );
-    m_spStatus->SetStatusMessage("TQ: Executing Task 2");
+    spData->vGuestBook.push_back( "Task 2 was here" );
+    spStatus->setStatusMessage("TQ: Executing Task 2");
 }
 
-void cTask3::ExecuteTask()
+void Task3::executeTask()
 {
-    m_spData->m_vGuestBook.push_back( "Task 3 was here" );
-    m_spStatus->SetStatusMessage("TQ: Executing Task 3");
+    spData->vGuestBook.push_back( "Task 3 was here" );
+    spStatus->setStatusMessage("TQ: Executing Task 3");
 }
 
-void cTask4::ExecuteTask()
+void Task4::executeTask()
 {
-    m_spData->m_vGuestBook.push_back( "Task 4 was here" );
-    m_spStatus->SetStatusMessage("TQ: Executing Task 4");
+    spData->vGuestBook.push_back( "Task 4 was here" );
+    spStatus->setStatusMessage("TQ: Executing Task 4");
 }
 
-cStatus::cStatus()
+Status::Status()
 {
-    m_spExecMessage = std::make_shared<std::vector<std::string>>();
+    spExecMessage = std::make_shared<std::vector<std::string>>();
 };
 
-void cStatus::SetStatusMessage(const std::string& sStatusMessage)
+void Status::setStatusMessage(const std::string& sStatusMessage)
 {
-    m_spExecMessage->push_back(sStatusMessage);
+    spExecMessage->push_back(sStatusMessage);
 };
 
-void cStatus::SetStatus(const bool& bExecStatus)
+void Status::setStatus(const bool& bExecStatus)
 {
-    m_bExecutionStatus = bExecStatus;
+    this->bExecutionStatus = bExecStatus;
 };
 
-std::shared_ptr<std::vector<std::string>> cStatus::GetStatusMessage() const
+std::shared_ptr<std::vector<std::string>> Status::getStatusMessage() const
 {
-    return m_spExecMessage;
+    return spExecMessage;
 };
 
-bool cStatus::GetStatus() const
+bool Status::getStatus() const
 {
-    return m_bExecutionStatus;
+    return bExecutionStatus;
 }
 
-cTaskQueue::cTaskQueue(const std::shared_ptr<cData>& spData, const std::shared_ptr<cStatus>& spStatus):
-m_spData(spData), m_spStatus(spStatus)
+TaskQueue::TaskQueue(const std::shared_ptr<Data>& spData, const std::shared_ptr<Status>& spStatus):
+spData(spData), spStatus(spStatus)
 {
-    m_spTask1 = std::shared_ptr<cTask>( new cTask1 );
-    m_spTask2 = std::shared_ptr<cTask>( new cTask2 );
-    m_spTask3 = std::shared_ptr<cTask>( new cTask3 );
-    m_spTask4 = std::shared_ptr<cTask>( new cTask4 );
+    spTask1 = std::shared_ptr<Task>( new Task1 );
+    spTask2 = std::shared_ptr<Task>( new Task2 );
+    spTask3 = std::shared_ptr<Task>( new Task3 );
+    spTask4 = std::shared_ptr<Task>( new Task4 );
 
-    m_spTask1->SetDataPointer( m_spData );
-    m_spTask2->SetDataPointer( m_spData );
-    m_spTask3->SetDataPointer( m_spData );
-    m_spTask4->SetDataPointer( m_spData );
+    spTask1->setDataPointer( spData );
+    spTask2->setDataPointer( spData );
+    spTask3->setDataPointer( spData );
+    spTask4->setDataPointer( spData );
 
-    m_spTask1->SetStatusPointer( m_spStatus );
-    m_spTask2->SetStatusPointer( m_spStatus );
-    m_spTask3->SetStatusPointer( m_spStatus );
-    m_spTask4->SetStatusPointer( m_spStatus );
+    spTask1->setStatusPointer( spStatus );
+    spTask2->setStatusPointer( spStatus );
+    spTask3->setStatusPointer( spStatus );
+    spTask4->setStatusPointer( spStatus );
 
     size_t nPreviousRandomNumber = 0;
     srand( (unsigned)time(NULL) );
@@ -94,38 +94,48 @@ m_spData(spData), m_spStatus(spStatus)
         
         if(nRsandNum == 1)
         {
-            m_TaskQueue.push(m_spTask1);
+            containerTaskQueue.push(spTask1);
         }
         else if(nRsandNum == 2)
         {
-            m_TaskQueue.push(m_spTask2);
+            containerTaskQueue.push(spTask2);
         }
         else if(nRsandNum == 3)
         {
-            m_TaskQueue.push(m_spTask3);
+            containerTaskQueue.push(spTask3);
         }
         else if(nRsandNum == 4)
         {
-            m_TaskQueue.push(m_spTask4);
+            containerTaskQueue.push(spTask4);
         }
 
         nPreviousRandomNumber = nRsandNum;
     }
 
-    m_spStatus->SetStatusMessage("TQ: Task queue is initialized");
+    spStatus->setStatusMessage("TQ: Task queue is initialized");
 }
 
-void cTaskQueue::AddTask(const std::shared_ptr<cTask>& spTask)
+void TaskQueue::addTask(const std::shared_ptr<Task>& spTask)
 {
-    m_TaskQueue.push(spTask);
+    containerTaskQueue.push(spTask);
 };
 
-void cTaskQueue::RunTQ()
+void TaskQueue::runTQ()
 {
-    while ( !m_TaskQueue.empty() && m_spStatus->GetStatus())
+    while ( checkForChangingTask() )
     {
-        m_TaskQueue.front()->ExecuteTask();
-        m_TaskQueue.pop();
+        changeTask();
     }
-    m_spStatus->SetStatusMessage("TQ: Task queue is succesfully executed");
+    spStatus->setStatusMessage("TQ: Task queue is succesfully executed");
+}
+
+bool TaskQueue::checkForChangingTask()
+{
+    return !containerTaskQueue.empty() && spStatus->getStatus();
+}
+
+void TaskQueue::changeTask()
+{
+    containerTaskQueue.front()->executeTask();
+    containerTaskQueue.pop();
 }

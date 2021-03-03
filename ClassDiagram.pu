@@ -4,66 +4,68 @@ skinparam monochrome true
 skinparam classAttributeIconSize 0
 
 together dataAndStatusGroup{
-    class cData{
-        +m_vGuestBook
+    class Data{
+        +vGuestBook
     }
 
-    class cStatus{
-        +SetStatus()
-        +SetStatusMessage()
-        +GetStatus()
-        +GetStatusMessage()
-        -m_bExecutionStatus = true
-        -m_spExecMessage
+    class Status{
+        +setStatus()
+        +setStatusMessage()
+        +getStatus()
+        +getStatusMessage()
+        -bExecutionStatus = true
+        -spExecMessage
     }
 }
-class cTaskQueue{
-    -m_TaskQueue
-    -m_spData
-    -m_spStatus
-    -m_spTask1
-    -m_spTask2
-    -m_spTask3
-    -m_spTask4
-    +AddTask()
-    +RunTQ()
+class TaskQueue{
+    -TaskQueue
+    -spData
+    -spStatus
+    -spTask1
+    -spTask2
+    -spTask3
+    -spTask4
+    +addTask()
+    +runTQ()
+    #checkForChangingTask()
+    #changeTask()
 }
 
-class cTask{
-    #m_spData
-    #m_spStatus
-    {abstract}+ExecuteTask()
-    +SetDataPointer()
-    +SetStatusPointer()
+class Task{
+    #spData
+    #spStatus
+    {abstract}+executeTask()
+    +setDataPointer()
+    +setStatusPointer()
 }
-class cTask1{
-    +ExecuteTask()
+class Task1{
+    +executeTask()
 }
-class cTask2{
-    +ExecuteTask()
+class Task2{
+    +executeTask()
 }
-class cTask3{
-    +ExecuteTask()
+class Task3{
+    +executeTask()
 }
-class cTask4{
-    +ExecuteTask()
+class Task4{
+    +executeTask()
 }
 
-cTask <|-- cTask1
-cTask <|-- cTask2
-cTask <|-- cTask3
-cTask <|-- cTask4
+Task <|-- Task1
+Task <|-- Task2
+Task <|-- Task3
+Task <|-- Task4
 
-cTaskQueue o--> cData
-cTaskQueue o--> cStatus
-cTaskQueue *--> cTask1
-cTaskQueue *--> cTask2
-cTaskQueue *--> cTask3
-cTaskQueue *--> cTask4
+TaskQueue o--> Data
+TaskQueue o--> Status
+TaskQueue *--> Task1
+TaskQueue *--> Task2
+TaskQueue *--> Task3
+TaskQueue *--> Task4
 
-cTaskQueue ..> cTask:<<uses>>
+TaskQueue ..> Task:<<uses>>
 
-cData -[hidden]down- cStatus
-cTaskQueue -[hidden]right-- cData
-cTaskQueue -[hidden]right-- cStatus
+Data -[hidden]down- Status
+TaskQueue -[hidden]right-- Data
+TaskQueue -[hidden]right-- Status
 @enduml

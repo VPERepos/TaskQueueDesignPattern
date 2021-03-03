@@ -3,16 +3,16 @@
 int main()
 {
     
-    auto spData{ std::make_shared<cData>() };
-    auto spStatus{ std::make_shared<cStatus>() };
-    auto spTQ{ std::make_unique<cTaskQueue>(spData, spStatus) };
+    auto spData{ std::make_shared<Data>() };
+    auto spStatus{ std::make_shared<Status>() };
+    auto spTQ{ std::make_unique<TaskQueue>(spData, spStatus) };
     
-    spTQ->RunTQ();
+    spTQ->runTQ();
     
-    auto ResultingStatus = spStatus->GetStatusMessage();
-    for(auto Message : *(ResultingStatus.get()) )
+    auto resultingStatus = spStatus->getStatusMessage();
+    for(auto message : *(resultingStatus.get()) )
     {
-        std::cout << Message << std::endl;
+        std::cout << message << std::endl;
     }
     return 0;
 

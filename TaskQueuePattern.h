@@ -3,83 +3,86 @@
 #include <memory>
 #include <queue>
 #include <iostream>
-class cData
+class Data
 {
 public:
-    cData(){};
-    ~cData(){};
-    std::vector<std::string> m_vGuestBook;
+    Data(){};
+    ~Data(){};
+    std::vector<std::string> vGuestBook;
 };
 
-class cStatus
+class Status
 {
 public:
-    cStatus();
-    ~cStatus(){};
-    void SetStatus(const bool& bExecStatus);
-    void SetStatusMessage(const std::string& sStatusMessage);
-    bool GetStatus() const;
-    std::shared_ptr<std::vector<std::string>> GetStatusMessage()const;
+    Status();
+    ~Status(){};
+    void setStatus(const bool& bExecStatus);
+    void setStatusMessage(const std::string& sStatusMessage);
+    bool getStatus() const;
+    std::shared_ptr<std::vector<std::string>> getStatusMessage()const;
 private:
-    bool m_bExecutionStatus = true;
-    std::shared_ptr<std::vector<std::string>> m_spExecMessage;
+    bool bExecutionStatus = true;
+    std::shared_ptr<std::vector<std::string>> spExecMessage;
 };
-class cTask
+class Task
 {
 public:
-    cTask() {};
-    virtual ~cTask(){};
-    virtual void ExecuteTask(){};
-    void SetDataPointer( const std::shared_ptr<cData>& spData );
-    void SetStatusPointer( const std::shared_ptr<cStatus>& spStatus );
+    Task() {};
+    virtual ~Task(){};
+    virtual void executeTask(){};
+    void setDataPointer( const std::shared_ptr<Data>& spData );
+    void setStatusPointer( const std::shared_ptr<Status>& spStatus );
 protected:
-    std::shared_ptr<cData> m_spData;
-    std::shared_ptr<cStatus> m_spStatus;
+    std::shared_ptr<Data> spData;
+    std::shared_ptr<Status> spStatus;
     
 };
 
-class cTask1 : public cTask
+class Task1 : public Task
 {
 public:
-    ~cTask1()override{};
-    void ExecuteTask() override;
+    ~Task1()override{};
+    void executeTask() override;
 };
 
-class cTask2 : public cTask
+class Task2 : public Task
 {
 public:
-    ~cTask2()override{};
-    void ExecuteTask() override;
+    ~Task2()override{};
+    void executeTask() override;
 };
 
-class cTask3 : public cTask
+class Task3 : public Task
 {
 public:
-    ~cTask3()override{};
-    void ExecuteTask() override;
+    ~Task3()override{};
+    void executeTask() override;
 };
 
-class cTask4 : public cTask
+class Task4 : public Task
 {
 public:
-    ~cTask4()override{};
-    void ExecuteTask() override;
+    ~Task4()override{};
+    void executeTask() override;
 };
 
-class cTaskQueue
+class TaskQueue
 {
 public: 
-    cTaskQueue(const std::shared_ptr<cData>& spData, const std::shared_ptr<cStatus>& spStatus);
-    ~cTaskQueue(){};
-    void AddTask(const std::shared_ptr<cTask>& spTask);
-    void RunTQ();
+    TaskQueue(const std::shared_ptr<Data>& spData, const std::shared_ptr<Status>& spStatus);
+    ~TaskQueue(){};
+    void addTask(const std::shared_ptr<Task>& spTask);
+    void runTQ();
+protected:
+    bool checkForChangingTask();
+    void changeTask();
 private:
-    std::queue<std::shared_ptr<cTask>> m_TaskQueue;
-    std::shared_ptr<cData> m_spData;   
-    std::shared_ptr<cStatus> m_spStatus; 
+    std::queue<std::shared_ptr<Task>> containerTaskQueue;
+    std::shared_ptr<Data> spData;   
+    std::shared_ptr<Status> spStatus; 
     
-    std::shared_ptr<cTask> m_spTask1;
-    std::shared_ptr<cTask> m_spTask2;
-    std::shared_ptr<cTask> m_spTask3;
-    std::shared_ptr<cTask> m_spTask4;
+    std::shared_ptr<Task> spTask1;
+    std::shared_ptr<Task> spTask2;
+    std::shared_ptr<Task> spTask3;
+    std::shared_ptr<Task> spTask4;
 };
