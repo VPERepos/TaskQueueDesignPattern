@@ -54,12 +54,12 @@ cTask <|-- cTask2
 cTask <|-- cTask3
 cTask <|-- cTask4
 
-cTaskQueue o-- cData
-cTaskQueue o-- cStatus
-cTaskQueue *-- cTask1
-cTaskQueue *-- cTask2
-cTaskQueue *-- cTask3
-cTaskQueue *-- cTask4
+cTaskQueue o--> cData
+cTaskQueue o--> cStatus
+cTaskQueue *--> cTask1
+cTaskQueue *--> cTask2
+cTaskQueue *--> cTask3
+cTaskQueue *--> cTask4
 
 cTaskQueue ..> cTask:<<uses>>
 
