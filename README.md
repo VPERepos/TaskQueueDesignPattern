@@ -7,68 +7,9 @@ Imagine, that you have some data that you would like to process, but the way to 
 ## Classes structure and functionality
 
 
-![UMLDiagram](/TaskQueue.png)
+![UMLDiagram](/ClassDiagram.svg)
 
 <!---```plantuml
-@startuml
 
-class cData{
-    +m_vGuestBook
-}
-
-class cStatus{
-    +SetStatus()
-    +SetStatusMessage()
-    +GetStatus()
-    +GetStatusMessage()
-    -m_bExecutionStatus = true
-    -m_spExecMessage
-}
-
-class cTaskQueue{
-    -m_TaskQueue
-    -m_spData
-    -m_spStatus
-    -m_spTask1
-    -m_spTask2
-    -m_spTask3
-    -m_spTask4
-    +AddTask()
-    +RunTQ()
-}
-
-class cTask{
-    #m_spData
-    #m_spStatus
-    {abstract}+ExecuteTask()
-    +SetDataPointer()
-    +SetStatusPointer()
-}
-class cTask1{
-    +ExecuteTask()
-}
-class cTask2{
-    +ExecuteTask()
-}
-class cTask3{
-    +ExecuteTask()
-}
-class cTask4{
-    +ExecuteTask()
-}
-
-cTask <|-- cTask1
-cTask <|-- cTask2
-cTask <|-- cTask3
-cTask <|-- cTask4
-
-cTaskQueue *-- cData
-cTaskQueue *-- cStatus
-cTaskQueue *-- cTask1
-cTaskQueue *-- cTask2
-cTaskQueue *-- cTask3
-cTaskQueue *-- cTask4
-
-@enduml
 ```--->
 UML-diagram above represents the design of the example program. There is a class called cTaskQueue, which consists of shared pointers to the objects of the classes cData, cStatus and cTask1 to cTask4. The shared pointers of types cStatus and cData are passed by parameters of the constructor of the cTaskQueue class. The objects of cTask1 to cTask4 types are allocated on heap in this constructor. The member variable m_TaskQueue is also filled out with randomly generated tasks in the constructor, but it can be done generally somewhere else in the program by using function AddTask(). Objects of types cData, cStatus and cTaskQueue are allocated on heap in the main function. Objects of types cTask1 to cTask4 have a function ExecuteTask(). This function can be powered with any custom business logic that processes an object of the type cData. The loop in the function RunTQ() takes the front element of the member variable m_TaskQue and calls the function ExecuteTask(). Afterwards the front element is deleted from the queue. This proceeds until the queue is empty.

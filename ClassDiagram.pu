@@ -1,0 +1,69 @@
+@startuml
+
+skinparam monochrome true
+skinparam classAttributeIconSize 0
+
+together dataAndStatusGroup{
+    class cData{
+        +m_vGuestBook
+    }
+
+    class cStatus{
+        +SetStatus()
+        +SetStatusMessage()
+        +GetStatus()
+        +GetStatusMessage()
+        -m_bExecutionStatus = true
+        -m_spExecMessage
+    }
+}
+class cTaskQueue{
+    -m_TaskQueue
+    -m_spData
+    -m_spStatus
+    -m_spTask1
+    -m_spTask2
+    -m_spTask3
+    -m_spTask4
+    +AddTask()
+    +RunTQ()
+}
+
+class cTask{
+    #m_spData
+    #m_spStatus
+    {abstract}+ExecuteTask()
+    +SetDataPointer()
+    +SetStatusPointer()
+}
+class cTask1{
+    +ExecuteTask()
+}
+class cTask2{
+    +ExecuteTask()
+}
+class cTask3{
+    +ExecuteTask()
+}
+class cTask4{
+    +ExecuteTask()
+}
+
+cTask <|-- cTask1
+cTask <|-- cTask2
+cTask <|-- cTask3
+cTask <|-- cTask4
+
+cTaskQueue o-- cData
+cTaskQueue o-- cStatus
+cTaskQueue *-- cTask1
+cTaskQueue *-- cTask2
+cTaskQueue *-- cTask3
+cTaskQueue *-- cTask4
+
+cTaskQueue ..> cTask:<<uses>>
+
+cData -[hidden]down- cStatus
+cTaskQueue -[hidden]right-- cData
+cTaskQueue -[hidden]right-- cStatus
+@enduml
