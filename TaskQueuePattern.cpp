@@ -65,10 +65,10 @@ bool Status::getStatus() const
 TaskQueue::TaskQueue(const std::shared_ptr<Data>& spData, const std::shared_ptr<Status>& spStatus):
 spData(spData), spStatus(spStatus)
 {
-    spTask1 = std::shared_ptr<Task>( new Task1 );
-    spTask2 = std::shared_ptr<Task>( new Task2 );
-    spTask3 = std::shared_ptr<Task>( new Task3 );
-    spTask4 = std::shared_ptr<Task>( new Task4 );
+    spTask1 = std::make_shared<Task1>();
+    spTask2 = std::make_shared<Task2>();
+    spTask3 = std::make_shared<Task3>();
+    spTask4 = std::make_shared<Task4>();
 
     spTask1->setDataPointer( spData );
     spTask2->setDataPointer( spData );
