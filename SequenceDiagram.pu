@@ -9,10 +9,30 @@ participant "unique_ptr<TaskQue>:spTQ" as D
 A ->  B **: make_shared<Data>()
 A ->  C **: make_shared<Status>()
 A ->  D **: make_unique<TaskQue>(spData, spExecStatus)
+D -> D : initTasks()
+D -> D : assignDataPointerToTasks()
+D -> D : assignStatusPointerToTasks()
+D -> D : initContainerForTasksSortedByNames()
+D -> D : initContainerForTaskNames()
+A -> D : getTaskNames()
+D ->> A
+A -> D : isTaskQueueEmpty()
+D ->> A
+alt task queue is not empty
+A -> D : clearTaskQueue()
+D ->> A
+end
+loop 10 times
+A -> D : addTaskToQueueByName()
+D ->> A
+end
+
 A -> D : runTQ()
 activate D
 
 loop checkForChangingTask()
     D -> D: changeTask()
 end
+D ->> A
+deactivate D
 @enduml

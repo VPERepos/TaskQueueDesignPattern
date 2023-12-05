@@ -1,4 +1,5 @@
 #include "TaskQueuePattern.h"
+#include <utility>
 #include <time.h>
 
 
@@ -12,7 +13,10 @@ void Task::setStatusPointer( const std::shared_ptr<Status>& spStatus )
 {
     this->spStatus = spStatus;
 };
-
+std::string Task::getTaskName()const
+{
+    return m_TaskName;
+}
 void Task1::executeTask()
 {
     spData->vGuestBook.push_back( "Task 1 was here" );
@@ -62,63 +66,79 @@ bool Status::getStatus() const
     return bExecutionStatus;
 }
 
-TaskQueue::TaskQueue(const std::shared_ptr<Data>& spData, const std::shared_ptr<Status>& spStatus):
-spData(spData), spStatus(spStatus)
+
+TaskQueue::TaskQueue(const std::shared_ptr<Data>& theSpData, const std::shared_ptr<Status>& theSpStatus):
+m_SpData(theSpData), m_SpStatus(theSpStatus)
 {
-    spTask1 = std::make_shared<Task1>();
-    spTask2 = std::make_shared<Task2>();
-    spTask3 = std::make_shared<Task3>();
-    spTask4 = std::make_shared<Task4>();
-
-    spTask1->setDataPointer( spData );
-    spTask2->setDataPointer( spData );
-    spTask3->setDataPointer( spData );
-    spTask4->setDataPointer( spData );
-
-    spTask1->setStatusPointer( spStatus );
-    spTask2->setStatusPointer( spStatus );
-    spTask3->setStatusPointer( spStatus );
-    spTask4->setStatusPointer( spStatus );
-
-    size_t nPreviousRandomNumber = 0;
-    srand( (unsigned)time(NULL) );
-    size_t nRsandNum = ( rand() % 4 ) + 1;
-    
-    for(size_t i=0; i<10; ++i)
-    {
-                
-        while( nPreviousRandomNumber == nRsandNum )
-        {
-            nRsandNum = ( rand() % 4 ) + 1;
-        }
-        
-        if(nRsandNum == 1)
-        {
-            containerTaskQueue.push(spTask1);
-        }
-        else if(nRsandNum == 2)
-        {
-            containerTaskQueue.push(spTask2);
-        }
-        else if(nRsandNum == 3)
-        {
-            containerTaskQueue.push(spTask3);
-        }
-        else if(nRsandNum == 4)
-        {
-            containerTaskQueue.push(spTask4);
-        }
-
-        nPreviousRandomNumber = nRsandNum;
-    }
-
-    spStatus->setStatusMessage("TQ: Task queue is initialized");
+    initTasks();
+    assignDataPointerToTasks(theSpData);
+    assignStatusPointerToTasks(theSpStatus);
+    initContainerForTasksSortedByNames();
+    initContainerForTaskNames();
+    theSpStatus->setStatusMessage("TQ: Task queue is initialized and empty");
 }
 
-void TaskQueue::addTask(const std::shared_ptr<Task>& spTask)
+void TaskQueue::initTasks()
 {
-    containerTaskQueue.push(spTask);
-};
+    m_SpTask1 = std::make_shared<Task1>("Task1");
+    m_SpTask2 = std::make_shared<Task2>("Task2");
+    m_SpTask3 = std::make_shared<Task3>("Task3");
+    m_SpTask4 = std::make_shared<Task4>("Task4");
+}
+
+void TaskQueue::assignDataPointerToTasks(const std::shared_ptr<Data>& theSpData)
+{
+    m_SpTask1->setDataPointer( theSpData );
+    m_SpTask2->setDataPointer( theSpData );
+    m_SpTask3->setDataPointer( theSpData );
+    m_SpTask4->setDataPointer( theSpData );
+}
+
+void TaskQueue::assignStatusPointerToTasks(const std::shared_ptr<Status>& theSpStatus)
+{
+    m_SpTask1->setStatusPointer( theSpStatus );
+    m_SpTask2->setStatusPointer( theSpStatus );
+    m_SpTask3->setStatusPointer( theSpStatus );
+    m_SpTask4->setStatusPointer( theSpStatus );
+}
+
+void TaskQueue::initContainerForTasksSortedByNames()
+{
+    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>(m_SpTask1->getTaskName(), m_SpTask1));
+    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>(m_SpTask2->getTaskName(), m_SpTask2));
+    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>(m_SpTask3->getTaskName(), m_SpTask3));
+    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>(m_SpTask4->getTaskName(), m_SpTask4));
+
+}
+
+void TaskQueue::initContainerForTaskNames()
+{
+    m_TaskNames.emplace_back(m_SpTask1->getTaskName());
+    m_TaskNames.emplace_back(m_SpTask2->getTaskName());
+    m_TaskNames.emplace_back(m_SpTask3->getTaskName());
+    m_TaskNames.emplace_back(m_SpTask4->getTaskName());
+}
+
+void TaskQueue::addTaskToQueueByName(const std::string& theTaskName)
+{
+    m_ContainerTaskQueue.push(m_TasksSortedByNames.at(theTaskName));
+}
+
+std::vector<std::string> TaskQueue::getTaskNames()
+{
+    return m_TaskNames;
+}
+
+void TaskQueue::clearTaskQueue()
+{
+    std::queue<std::shared_ptr<Task>> empty;
+    std::swap( m_ContainerTaskQueue, empty );
+}
+
+bool TaskQueue::isTaskQueueEmpty()
+{
+    return m_ContainerTaskQueue.empty();
+}
 
 void TaskQueue::runTQ()
 {
@@ -126,16 +146,16 @@ void TaskQueue::runTQ()
     {
         changeTask();
     }
-    spStatus->setStatusMessage("TQ: Task queue is succesfully executed");
+    m_SpStatus->setStatusMessage("TQ: Task queue is succesfully executed");
 }
 
 bool TaskQueue::checkForChangingTask()
 {
-    return !containerTaskQueue.empty() && spStatus->getStatus();
+    return !m_ContainerTaskQueue.empty() && m_SpStatus->getStatus();
 }
 
 void TaskQueue::changeTask()
 {
-    containerTaskQueue.front()->executeTask();
-    containerTaskQueue.pop();
+    m_ContainerTaskQueue.front()->executeTask();
+    m_ContainerTaskQueue.pop();
 }
