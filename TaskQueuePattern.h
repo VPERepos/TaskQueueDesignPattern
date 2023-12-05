@@ -27,14 +27,23 @@ private:
 class Task
 {
 public:
-    Task() {};
+    Task(std::string& theTaskName):m_TaskName{theTaskName} 
+    {
+        if(m_TaskName.size() == 0)
+        {
+            std::exception("State name can not be empty");
+        }
+    };
     virtual ~Task(){};
     virtual void executeTask(){};
     void setDataPointer( const std::shared_ptr<Data>& spData );
     void setStatusPointer( const std::shared_ptr<Status>& spStatus );
+
 protected:
     std::shared_ptr<Data> spData;
     std::shared_ptr<Status> spStatus;
+private:
+    std::string m_TaskName;
     
 };
 
