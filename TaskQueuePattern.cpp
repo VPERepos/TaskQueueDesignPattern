@@ -66,35 +66,57 @@ bool Status::getStatus() const
     return bExecutionStatus;
 }
 
-TaskQueue::TaskQueue(const std::shared_ptr<Data>& spData, const std::shared_ptr<Status>& spStatus):
-m_SpData(spData), m_SpStatus(spStatus)
+
+TaskQueue::TaskQueue(const std::shared_ptr<Data>& theSpData, const std::shared_ptr<Status>& theSpStatus):
+m_SpData(theSpData), m_SpStatus(theSpStatus)
+{
+    initTasks();
+    assignDataPointerToTasks(theSpData);
+    assignStatusPointerToTasks(theSpStatus);
+    initContainerForTasksSortedByNames();
+    initContainerForTaskNames();
+    theSpStatus->setStatusMessage("TQ: Task queue is initialized and empty");
+}
+
+void TaskQueue::initTasks()
 {
     m_SpTask1 = std::make_shared<Task1>("Task1");
     m_SpTask2 = std::make_shared<Task2>("Task2");
     m_SpTask3 = std::make_shared<Task3>("Task3");
     m_SpTask4 = std::make_shared<Task4>("Task4");
+}
 
-    m_SpTask1->setDataPointer( spData );
-    m_SpTask2->setDataPointer( spData );
-    m_SpTask3->setDataPointer( spData );
-    m_SpTask4->setDataPointer( spData );
+void TaskQueue::assignDataPointerToTasks(const std::shared_ptr<Data>& theSpData)
+{
+    m_SpTask1->setDataPointer( theSpData );
+    m_SpTask2->setDataPointer( theSpData );
+    m_SpTask3->setDataPointer( theSpData );
+    m_SpTask4->setDataPointer( theSpData );
+}
 
-    m_SpTask1->setStatusPointer( spStatus );
-    m_SpTask2->setStatusPointer( spStatus );
-    m_SpTask3->setStatusPointer( spStatus );
-    m_SpTask4->setStatusPointer( spStatus );
+void TaskQueue::assignStatusPointerToTasks(const std::shared_ptr<Status>& theSpStatus)
+{
+    m_SpTask1->setStatusPointer( theSpStatus );
+    m_SpTask2->setStatusPointer( theSpStatus );
+    m_SpTask3->setStatusPointer( theSpStatus );
+    m_SpTask4->setStatusPointer( theSpStatus );
+}
 
-    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>("Task1", m_SpTask1));
-    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>("Task2", m_SpTask2));
-    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>("Task3", m_SpTask3));
-    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>("Task4", m_SpTask4));
+void TaskQueue::initContainerForTasksSortedByNames()
+{
+    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>(m_SpTask1->getTaskName(), m_SpTask1));
+    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>(m_SpTask2->getTaskName(), m_SpTask2));
+    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>(m_SpTask3->getTaskName(), m_SpTask3));
+    m_TasksSortedByNames.emplace(std::pair<std::string, std::shared_ptr<Task>>(m_SpTask4->getTaskName(), m_SpTask4));
 
-    m_TaskNames.emplace_back("Task1");
-    m_TaskNames.emplace_back("Task2");
-    m_TaskNames.emplace_back("Task3");
-    m_TaskNames.emplace_back("Task4");
-        
-    spStatus->setStatusMessage("TQ: Task queue is initialized and empty");
+}
+
+void TaskQueue::initContainerForTaskNames()
+{
+    m_TaskNames.emplace_back(m_SpTask1->getTaskName());
+    m_TaskNames.emplace_back(m_SpTask2->getTaskName());
+    m_TaskNames.emplace_back(m_SpTask3->getTaskName());
+    m_TaskNames.emplace_back(m_SpTask4->getTaskName());
 }
 
 void TaskQueue::addTaskToQueueByName(const std::string& theTaskName)

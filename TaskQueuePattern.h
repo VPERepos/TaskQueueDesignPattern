@@ -104,4 +104,10 @@ private:
     std::shared_ptr<Task> m_SpTask2;
     std::shared_ptr<Task> m_SpTask3;
     std::shared_ptr<Task> m_SpTask4;
+
+    void initTasks();
+    void assignDataPointerToTasks(const std::shared_ptr<Data>& theSpData);
+    void assignStatusPointerToTasks(const std::shared_ptr<Status>& theSpStatus);
+    void initContainerForTasksSortedByNames();
+    void initContainerForTaskNames();
 };

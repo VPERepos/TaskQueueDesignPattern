@@ -18,25 +18,25 @@ together dataAndStatusGroup{
     }
 }
 class TaskQueue{
-    -TaskQueue
-    -spData
-    -spStatus
-    -spTask1
-    -spTask2
-    -spTask3
-    -spTask4
-    +addTask()
+    +TaskQueue()
+    +~TaskQueue()
+    +clearTaskQueue()
+    +addTaskToQueueByName()
+    +getTaskNames()
+    +isTaskQueueEmpty()
     +runTQ()
     #checkForChangingTask()
     #changeTask()
 }
 
 class Task{
+    {abstract}+Task()
     #spData
     #spStatus
     {abstract}+executeTask()
     +setDataPointer()
     +setStatusPointer()
+    +getTaskName()
 }
 class Task1{
     +executeTask()
